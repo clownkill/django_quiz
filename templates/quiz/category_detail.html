@@ -1,0 +1,17 @@
+{%  extends 'base.html' %}
+
+{% block title %}{{ category.name }}{% endblock title %}
+
+{% block content %}
+    <div class="container mt-5 pt-5">
+            <div class="col-md-5 mx-auto">
+                <h3>{{ category.name }}:</h3>
+                    <ul>
+                        {% for quiz in category.quizzes.all %}
+                            <li><a href="{% url 'quiz:quiz' quiz.slug %}">{{ quiz.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                <a class="btn btn-danger" href="{% url 'quiz:home' %}">К списку категорий</a>
+            </div>
+    </div>
+{% endblock content %}

@@ -1,14 +1,11 @@
 import uuid
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
+from .validators import answers_validator
 
 class BaseModel(models.Model):
-    uid = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False
-    )
     created_at = models.DateTimeField(
         'Дата создания',
         auto_now_add=True
@@ -27,6 +24,9 @@ class Category(BaseModel):
         'Название категории',
         max_length=100
     )
+    slug = models.SlugField(
+        max_length=250
+    )
 
     class Meta:
         verbose_name = 'Категория'
@@ -36,20 +36,41 @@ class Category(BaseModel):
         return self.name
 
 
-class Question(BaseModel):
+class Quiz(BaseModel):
+    name = models.CharField(
+        'Название теста',
+        max_length=250,
+        unique=True
+    )
+    slug = models.SlugField(
+        max_length=250
+    )
     category = models.ForeignKey(
         Category,
+        related_name='quizzes',
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name='Категория'
+    )
+
+    class Meta:
+        verbose_name = 'Тест'
+        verbose_name_plural = 'Тесты'
+
+    def __str__(self):
+        return self.name
+
+
+class Question(BaseModel):
+    quiz = models.ForeignKey(
+        Quiz,
         related_name='questions',
         on_delete=models.CASCADE,
-        verbose_name='Категория'
+        verbose_name='Тест',
     )
     question = models.TextField(
         'Вопрос',
         max_length=1000
-    )
-    marks = models.IntegerField(
-        'Оценка',
-        default=1
     )
 
     class Meta:
@@ -59,6 +80,11 @@ class Question(BaseModel):
     def __str__(self):
         return self.question
 
+    def get_answers(self):
+        return [
+            (answer.id, answer.answer) for answer in self.answers.all()
+        ]
+
 
 class Answer(BaseModel):
     question = models.ForeignKey(
@@ -67,9 +93,9 @@ class Answer(BaseModel):
         on_delete=models.CASCADE,
         verbose_name='Ответ'
     )
-    answer = models.TextField(
+    answer = models.CharField(
         'Ответ',
-        max_length=1000
+        max_length=250
     )
     is_correct = models.BooleanField(
         'Правильный ответ',

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.name }}{% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+        <h1>Общие данные</h1>
+    </div>
+    {% if possible %}
+        <p class="lead">
+            Очки: {{ session }} из {{ possible }}
+        </p>
+    {% endif %}
+    <a href="{% url 'quiz:home' %}">К списку категорий</a>
+{% endblock content %}

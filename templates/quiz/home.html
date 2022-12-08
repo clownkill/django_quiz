@@ -1,0 +1,22 @@
+{%  extends 'base.html' %}
+
+{% block title %}Выберите категорию{% endblock title %}
+
+{% block content %}
+    <div class="container mt-5 pt-5">
+        <div class="col-md-6 mx-auto">
+            <form>
+                <div class="form-group">
+                    <label>Категории тестов</label>
+                    <select name="category" class="form-control">
+                        <option value="Choose">Выберите категорию</option>
+                        {% for category in categories %}
+                            <option value="{{ category.name }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-danger mt-3">Подтвердить</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

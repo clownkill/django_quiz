@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.name }}{% endblock title %}
+
+{% block content %}
+    <div class="container mt-5 pt-5">
+        <div class="col-md-5 mx-auto">
+            {% if question %}
+
+    {% if progress %}
+        <div style="float: right;">
+            Вопрос {{progress.0|add:1}} из {{ progress.1 }}
+        </div>
+    {% endif %}
+
+    <p>
+        <small class="muted">Категория:</small>
+        <strong>{{ quiz.category }}</strong>
+    </p>
+    <p class="lead">{{ question.question }}</p>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type=hidden name="question_id" value="{{ question_id }}">
+        <ul class="list-group">
+            {% for answer in form.answers %}
+                <li class="list-group-item">
+                    {{ answer }}
+                </li>
+            {% endfor %}
+        </ul>
+        <input type="submit" value="Подтвердить" class="btn btn-large btn-block btn-success">
+    </form>
+{% endif %}
+        </div>
+    </div>
+{% endblock content %}
