@@ -3,14 +3,25 @@
 {% block title %}{{ quiz.name }}{% endblock title %}
 
 {% block content %}
-
-    <div class="row">
-        <h1>Общие данные</h1>
+    <div class="container mt-5 pt-5">
+        <div class="col-md-5 mx-auto">
+            <div class="row">
+                <h3>Результат прохождения теста:</h3>
+            </div>
+            {% if possible %}
+                <p class="lead">
+                    Правильные ответы: {{ session_score }} из {{ possible }}
+                </p>
+            {% endif %}
+            {% if incorrect_questions %}
+                <h4>Вопросы на которые даны неверные ответы:</h4>
+                <ul>
+                    {% for question in incorrect_questions %}
+                        <li>{{ question.question }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <a class="btn btn-danger" href="{% url 'quiz:home' %}">К списку категорий</a>
+        </div>
     </div>
-    {% if possible %}
-        <p class="lead">
-            Очки: {{ session }} из {{ possible }}
-        </p>
-    {% endif %}
-    <a href="{% url 'quiz:home' %}">К списку категорий</a>
 {% endblock content %}

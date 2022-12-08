@@ -68,13 +68,12 @@ class QuizView(FormView):
         questions = self.quiz.questions.all()
         question_list = [question.id for question in questions]
 
-        self.request.session[f'{self.request.user.id}_score'] = 0
+        # self.request.session[f'{self.request.user.id}_score'] = 0
         self.request.session[f'{self.request.user.id}_question_list'] = question_list
         self.request.session[f'{self.request.user.id}_question_data'] = dict(
             incorrect_questions=[],
             order=question_list,
         )
-        print(self.request.session.keys())
         return self.request.session[f'{self.request.user.id}_question_list']
     #
     def get_next_question(self):
@@ -96,7 +95,7 @@ class QuizView(FormView):
 
 
         if guess == correct_answers:
-            self.request.session[f'{self.request.user.id}_score'] += 1
+            # self.request.session[f'{self.request.user.id}_score'] += 1
             self.session_score(self.request.session, 1, 1)
         else:
             self.request.session[
@@ -112,16 +111,20 @@ class QuizView(FormView):
         ] = self.request.session[f'{self.request.user.id}_question_list'][1:]
 
     def final_result(self):
-        score = self.request.session[f'{self.request.user.id}_score']
-        q_order = self.request.session[f'{self.request.user.id}_question_data']['order']
-        session, session_possible = self.session_score(
+        incorrect_question_ids = self.request.session[
+            f'{self.request.user.id}_question_data'
+        ]['incorrect_questions']
+        session_score, session_possible = self.session_score(
             self.request.session)
 
-        if score == 0:
-            score = "0"
+        incorrect_questions = []
+        if incorrect_question_ids:
+            for id in incorrect_question_ids:
+                incorrect_questions.append(Question.objects.get(id=id))
+
         results = {
-            'score': score,
-            'session': session,
+            'incorrect_questions': incorrect_questions,
+            'session_score': session_score,
             'possible': session_possible,
 
         }

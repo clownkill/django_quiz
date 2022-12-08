@@ -54,6 +54,7 @@ class Quiz(BaseModel):
     )
 
     class Meta:
+        ordering = ['-created_at',]
         verbose_name = 'Тест'
         verbose_name_plural = 'Тесты'
 
@@ -74,6 +75,7 @@ class Question(BaseModel):
     )
 
     class Meta:
+        ordering = ['-created_at',]
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
 
