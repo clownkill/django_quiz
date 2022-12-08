@@ -1,26 +1,24 @@
-import random
-
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, FormView
 
-from .models import Category, Question, Answer, Quiz
+from .models import Category, Question, Quiz
 from .forms import QuestionForm
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
 
     context_object_name = 'categories'
     paginate_by =  20
 
 
-class CategoryDetailView(DetailView):
+class CategoryDetailView(LoginRequiredMixin, DetailView):
     model = Category
     paginate_by = 20
 
 
-class QuizView(FormView):
+class QuizView(LoginRequiredMixin, FormView):
     form_class = QuestionForm
     template_name = 'quiz/question.html'
     
@@ -68,7 +66,6 @@ class QuizView(FormView):
         questions = self.quiz.questions.all()
         question_list = [question.id for question in questions]
 
-        # self.request.session[f'{self.request.user.id}_score'] = 0
         self.request.session[f'{self.request.user.id}_question_list'] = question_list
         self.request.session[f'{self.request.user.id}_question_data'] = dict(
             incorrect_questions=[],
@@ -95,7 +92,6 @@ class QuizView(FormView):
 
 
         if guess == correct_answers:
-            # self.request.session[f'{self.request.user.id}_score'] += 1
             self.session_score(self.request.session, 1, 1)
         else:
             self.request.session[
@@ -114,18 +110,21 @@ class QuizView(FormView):
         incorrect_question_ids = self.request.session[
             f'{self.request.user.id}_question_data'
         ]['incorrect_questions']
-        session_score, session_possible = self.session_score(
-            self.request.session)
-
         incorrect_questions = []
         if incorrect_question_ids:
             for id in incorrect_question_ids:
                 incorrect_questions.append(Question.objects.get(id=id))
 
+        session_score, session_possible = self.session_score(
+            self.request.session)
+
+        percent_correct = session_score / session_possible * 100
+
         results = {
             'incorrect_questions': incorrect_questions,
             'session_score': session_score,
             'possible': session_possible,
+            'percent_correct': percent_correct,
 
         }
 

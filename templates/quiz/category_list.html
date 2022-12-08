@@ -3,26 +3,22 @@
 {% block title %}Выберите категорию{% endblock title %}
 
 {% block content %}
-    <div class="container mt-5 pt-5">
-            <div class="col-md-5 mx-auto">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Категория</th>
-                      <th scope="col">Количество тестов</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for category in categories %}
-                        <tr>
-                            <td>{{ category.name }}</td>
-                            <td>{{ category.quizzes.count }}</td>
-                            <td><a class="btn btn-danger" href="{% url 'quiz:category' category.slug %}">Перейти</a></td>
-                        </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-            </div>
-    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Категория</th>
+          <th scope="col">Количество тестов</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.quizzes.count }}</td>
+                <td><a class="btn btn-danger" href="{% url 'quiz:category' category.slug %}">Перейти</a></td>
+            </tr>
+      {% endfor %}
+      </tbody>
+    </table>
 {% endblock content %}
