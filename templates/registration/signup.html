@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block title %}Регистрация{% endblock title %}
+
+{% block content %}
+    <h2>Регистрация нового пользователя</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bootstrap_button button_type="submit" content="Зарегистрироваться" %}
+    </form>
+    <p>Уже есть аккаунт? (<a href="{% url 'login' %}">Войти</a>)</p>
+{% endblock content %}

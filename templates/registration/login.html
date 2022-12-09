@@ -10,4 +10,9 @@
         {% bootstrap_form form %}
         {% bootstrap_button button_type="submit" content="Log In" %}
     </form>
+    <p>
+        Нет аккаунта / забыл пароль? (
+        <a href="{% url 'accounts:signup' %}">Зарегистрироваться</a> / <a href="{% url 'password_reset' %}">Сбросить пароль</a>
+        )
+    </p>
 {% endblock content %}
