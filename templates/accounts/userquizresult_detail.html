@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.name }}{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <h3>Результат прохождения теста {{ quiz.quiz.name }}:</h3>
+    </div>
+        <p>Правильные ответы: {{ quiz.correct_answers }} из {{ quiz.question_counts }}</p>
+        <p>Процент правильных ответов: {{ percent_correct }}%</p>
+    <a class="btn btn-danger" href="{% url 'accounts:account' %}">К списку пройденных тестов</a>
+{% endblock content %}

@@ -14,7 +14,7 @@
               {{ user.username }}
           </a>
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Личный кабинет</a></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:account' %}">Личный кабинет</a></li>
             <li><a class="dropdown-item" href="{% url 'logout' %}">Выход</a></li>
             <li><a class="dropdown-item" href="{% url 'password_reset' %}">Сменить пароль</a></li>
           </ul>

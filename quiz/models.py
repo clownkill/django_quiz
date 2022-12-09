@@ -1,9 +1,5 @@
-import uuid
-
 from django.db import models
-from django.core.exceptions import ValidationError
 
-from .validators import answers_validator
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(
