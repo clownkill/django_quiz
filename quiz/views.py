@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, FormView
+from django.contrib.auth.models import User
 
 from .models import Category, Question, Quiz
+from accounts.models import UserQuizResult
 from .forms import QuestionForm
 
 
@@ -39,7 +41,7 @@ class QuizView(LoginRequiredMixin, FormView):
         return dict(kwargs, question=self.question)
 
     def form_valid(self, form):
-        self.form_valid_anon(form)
+        self.user_form_valid(form)
         if not self.request.session[f'{self.request.user.id}_question_list']:
             return self.final_result()
         self.request.POST = {}
@@ -82,7 +84,7 @@ class QuizView(LoginRequiredMixin, FormView):
         answered = total - len(self.request.session[f'{self.request.user.id}_question_list'])
         return (answered, total)
 
-    def form_valid_anon(self, form):
+    def user_form_valid(self, form):
         guess = [
             int(user_answer) for user_answer in form.cleaned_data['answers']
         ]
@@ -127,6 +129,13 @@ class QuizView(LoginRequiredMixin, FormView):
             'percent_correct': percent_correct,
 
         }
+
+        UserQuizResult.objects.create(
+            user=get_object_or_404(User, id=self.request.user.id),
+            quiz=self.quiz,
+            question_counts=session_possible,
+            correct_answers=session_score
+        )
 
         del self.request.session[f'{self.request.user.id}_question_list']
 
