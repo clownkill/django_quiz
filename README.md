@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)
 
 
-Сайт для проведения тестов.
+Веб-приложение для проведения тестов.
 
 
 ### Требования
